@@ -71,8 +71,8 @@ def morphTriangle(img1, img2, img, t1, t2, t, alpha) :
 
 if __name__ == '__main__' :
 
-    filename1 = 'hillary_clinton.jpg'
-    filename2 = 'ted_cruz.jpg'
+    filename1 = '1.JPG'
+    filename2 = '4.JPG'
     alpha = 0.5
     
     # Read images
@@ -99,14 +99,16 @@ if __name__ == '__main__' :
     imgMorph = np.zeros(img1.shape, dtype = img1.dtype)
 
     # Read triangles from tri.txt
-    with open("tri.txt") as file :
+    with open("tris_1-4.txt") as file :
         for line in file :
             x,y,z = line.split()
             
             x = int(x)
             y = int(y)
             z = int(z)
-            
+            print x
+            print y
+            print z
             t1 = [points1[x], points1[y], points1[z]]
             t2 = [points2[x], points2[y], points2[z]]
             t = [ points[x], points[y], points[z] ]
