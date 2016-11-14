@@ -3,7 +3,7 @@
 import cv2
 import numpy as np
 import random
-import json
+import csv
 
 # Check if a point is inside a rectangle
 def rect_contains(rect, point) :
@@ -21,22 +21,19 @@ def rect_contains(rect, point) :
 def draw_point(img, p, color ) :
     cv2.circle( img, p, 2, color, cv2.FILLED, cv2.LINE_AA, 0 )
 
+
 # Draw delaunay triangles
 def draw_delaunay(img, subdiv, delaunay_color ) :
 
     triangleList = subdiv.getTriangleList();
     size = img.shape
-    r = (0, 0, size[1], size[0])
-
+    r = (0, 0, size[1], size[0])    
     for t in triangleList :
         
         pt1 = (t[0], t[1])
         pt2 = (t[2], t[3])
-        pt3 = (t[4], t[5])
-        print pt1
-        print pt2
-        print pt3
-
+        pt3 = (t[4], t[5])    
+     
         if rect_contains(r, pt1) and rect_contains(r, pt2) and rect_contains(r, pt3) :
         
             cv2.line(img, pt1, pt2, delaunay_color, 1, cv2.LINE_AA, 0)
@@ -77,7 +74,7 @@ if __name__ == '__main__':
     points_color = (0, 0, 255)
 
     # Read in the image.
-    img = cv2.imread("4.JPG");
+    img = cv2.imread("6.JPG");
     
     # Keep a copy around
     img_orig = img.copy();
@@ -93,7 +90,7 @@ if __name__ == '__main__':
     points = [];
     
     # Read in the points from a text file
-    with open("4.txt") as file :
+    with open("6.txt") as file :
         for line in file :
             x, y = line.split()
             points.append((int(x), int(y)))
@@ -105,16 +102,47 @@ if __name__ == '__main__':
         # Show animation
         if animate :
             img_copy = img_orig.copy()
-            # Draw delaunay triangles
-            print subdiv
+            # Draw delaunay triangles         
             draw_delaunay( img_copy, subdiv, (255, 255, 255) );
             cv2.imshow(win_delaunay, img_copy)
             cv2.waitKey(100)
 
     # Draw delaunay triangles
-    draw_delaunay( img, subdiv, (255, 255, 255) );    
-    #with open('tris.txt', 'w') as outfile:
-    #    json.dump(subdiv.getTriangleList(), outfile)
+    draw_delaunay( img, subdiv, (255, 255, 255) ); 
+
+    triangleList = subdiv.getTriangleList();
+    tris = [];
+    size = img.shape
+    r = (0, 0, size[1], size[0])    
+    for t in triangleList :
+        
+        pt1 = (int(t[0]), int(t[1]))
+        pt2 = (int(t[2]), int(t[3]))
+        pt3 = (int(t[4]), int(t[5]))
+        triangle = []
+        if rect_contains(r, pt1) and rect_contains(r, pt2) and rect_contains(r, pt3) :
+            x = 1          
+            for p in points:
+                if p == pt1:
+                    triangle.append(x)
+                x = x+1
+            y = 1
+            for p in points:
+                if p == pt2:
+                    triangle.append(y)
+                y = y+1
+            z = 1   
+            for p in points:
+                if p == pt3:            
+                    triangle.append(z)
+                z = z+1
+                                    
+            tris.append(triangle)
+            
+    with open('tris_6.txt', 'w') as f:        
+        csv.writer(f, delimiter=' ').writerows(tris)
+    
+     
     #print subdiv.getTriangleList()
     # Draw points
     for p in points :
@@ -122,7 +150,7 @@ if __name__ == '__main__':
 
     # Allocate space for voronoi Diagram
     img_voronoi = np.zeros(img.shape, dtype = img.dtype)
-
+   
     # Draw voronoi diagram
     draw_voronoi(img_voronoi,subdiv)
 
