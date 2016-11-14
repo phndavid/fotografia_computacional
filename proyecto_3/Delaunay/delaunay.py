@@ -74,7 +74,7 @@ if __name__ == '__main__':
     points_color = (0, 0, 255)
 
     # Read in the image.
-    img = cv2.imread("5.JPG");
+    img = cv2.imread("6.JPG");
     
     # Keep a copy around
     img_orig = img.copy();
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     points = [];
     
     # Read in the points from a text file
-    with open("5.JPG.txt") as file :
+    with open("6.JPG.txt") as file :
         for line in file :
             x, y = line.split()
             points.append((int(x), int(y)))
@@ -145,7 +145,7 @@ if __name__ == '__main__':
                                     
             tris.append(triangle)
             
-    with open('tris_2-5.txt', 'w') as f:        
+    with open('tris_6-9.txt', 'w') as f:        
         csv.writer(f, delimiter=' ').writerows(tris)
     
      
